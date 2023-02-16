@@ -9,3 +9,4 @@ which has a column with exact time of scraping as well.
 namad : the name of investment fund
 p     : final transaction value
 
+* The web link for scraping : tsetmc.com/
