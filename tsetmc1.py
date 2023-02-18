@@ -7,6 +7,11 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import schedule
 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+import datetime
+from typing import Text
 
 counter = 0
 payani_list = []
@@ -45,14 +50,30 @@ def func():
 		btn1.click()
 		btn2 = driver.find_element('xpath','//*[@id="SearchKey"]')
 		btn2.send_keys(n)
-		time.sleep(7)
+		time.sleep(10)
+
+		
+		WebDriverWait(driver,5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".s750 > div:nth-child(2) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(1)"))).click()
+		time.sleep(14)
+		
+		
+		soup = BeautifulSoup(driver.page_source , 'html.parser')
 
 
-        #data = pd.read_csv(('p_n.csv'), index_col=[0])
-
-        # data.to_csv('p_n.csv')
-		# print(data)
-		# counter += 1
+		data2 = pd.DataFrame({
+			'nomad':[n],
+			'time':[datetime.datetime.now()],
+			'payani':[float((soup.find('span' , style = 'font-size:15px;font-weight:bold').text).replace(',' ,''))],
+			'nav':[float((soup.find('td' , id = 'PRedTran').text).replace(',' ,''))]
+			})
+		data2['p/nav'] = data2['payani']/data2['nav']
+		data = pd.read_csv(('p_n.csv'), index_col=[0])
+		data = data.append(data2 ,ignore_index = True)
+		data = pd.read_csv(('p_n.csv'), index_col=[0])
+		
+		data.to_csv('p_n.csv')
+		print(data)
+		counter += 1
 
 
 schedule.every(1).minutes.do(func)
