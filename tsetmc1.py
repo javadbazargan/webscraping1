@@ -69,7 +69,7 @@ def func():
 		data2['p/nav'] = data2['payani']/data2['nav']
 		data = pd.read_csv(('p_n.csv'), index_col=[0])
 		data = data.append(data2 ,ignore_index = True)
-		data = pd.read_csv(('p_n.csv'), index_col=[0])
+		
 		
 		data.to_csv('p_n.csv')
 		print(data)
